@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+<section class="rai-auth-wrap">
+    <div class="container">
+        <div class="rai-auth-card">
+            <div class="text-center mb-4">
+                <div class="rai-hero-eyebrow mb-1">Join RecipeAI</div>
+                <h1 class="h3 mb-0">Create your account</h1>
+            </div>
+
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.username.label(class="form-label") }}
+                    {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else ""), placeholder="e.g. narayani_k") }}
+                    {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="you@example.com") }}
+                    {% for error in form.email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="At least 8 characters") }}
+                    {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="mb-4">
+                    {{ form.confirm_password.label(class="form-label") }}
+                    {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else "")) }}
+                    {% for error in form.confirm_password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                </div>
+
+                {{ form.submit(class="btn rai-btn-accent w-100") }}
+            </form>
+
+            <p class="text-center small text-muted mt-4 mb-0">
+                Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

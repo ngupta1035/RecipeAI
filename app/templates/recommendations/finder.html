@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Ingredient Finder{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="mb-4">
+        <div class="rai-hero-eyebrow mb-1">Cook with what you have</div>
+        <h1 class="h3 mb-1">Ingredient-Based Recipe Finder</h1>
+        <p class="text-muted mb-0">Enter what's in your kitchen and we'll rank recipes by how much of the
+            ingredient list you can already cover.</p>
+    </div>
+
+    <form method="GET" class="rai-card p-3 p-md-4 mb-4">
+        <label class="form-label small mb-1">Ingredients you have</label>
+        <div class="d-flex flex-column flex-md-row gap-2">
+            <input type="text" name="ingredients" class="form-control" required
+                   placeholder="e.g. potato, onion, tomato, paneer" value="{{ ingredients_text }}">
+            <button type="submit" class="btn rai-btn-accent px-4">
+                <i class="bi bi-search"></i> Find Recipes
+            </button>
+        </div>
+        <div class="form-text">Separate ingredients with commas.</div>
+    </form>
+
+    {% if ingredients_text %}
+        {% if available %}
+        <p class="small text-muted mb-4">Matching against: {{ available|join(', ') }}</p>
+        {% endif %}
+
+        {% if results %}
+        <div class="row g-4">
+            {% for item in results %}
+            <div class="col-md-6">
+                <div class="rai-card p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <a href="{{ url_for('recipes.detail', recipe_id=item.recipe.id) }}" class="rai-card-title text-decoration-none">
+                            {{ item.recipe.name }}
+                        </a>
+                        <span class="rai-stamp">{{ item.match_percentage }}% match</span>
+                    </div>
+
+                    {% if item.recipe.cuisine %}<span class="badge text-bg-light border mb-2">{{ item.recipe.cuisine }}</span>{% endif %}
+
+                    <div class="small mb-2">
+                        <span class="text-success fw-semibold">
+                            <i class="bi bi-check-circle"></i> You have ({{ item.matching|length }}):
+                        </span>
+                        {{ item.matching|join(', ') if item.matching else 'none' }}
+                    </div>
+
+                    <div class="small">
+                        <span class="text-muted fw-semibold">
+                            <i class="bi bi-cart-plus"></i> Still need ({{ item.missing|length }}):
+                        </span>
+                        {% if item.missing %}
+                        {{ item.missing|join(', ') }}
+                        {% else %}
+                        <span class="text-success">Nothing — you have it all!</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="rai-card p-4 text-center">
+            <p class="mb-0">No recipes share any of those ingredients yet. Try different ingredients or
+                add a recipe of your own.</p>
+        </div>
+        {% endif %}
+    {% endif %}
+</section>
+{% endblock %}

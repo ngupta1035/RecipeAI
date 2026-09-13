@@ -1,0 +1,401 @@
+:root {
+    --rai-ink: #22301F;
+    --rai-parchment: #F7F1E4;
+    --rai-parchment-deep: #EFE6D2;
+    --rai-paprika: #A4441F;
+    --rai-paprika-dark: #7E3316;
+    --rai-herb: #4B6B44;
+    --rai-gold: #C58A2E;
+    --rai-surface: #FFFDF8;
+    --rai-line: #DCCFAF;
+
+    --font-display: "Fraunces", "Georgia", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: "IBM Plex Mono", monospace;
+}
+
+html, body {
+    background: var(--rai-parchment);
+    color: var(--rai-ink);
+    font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, .rai-brand, .rai-display {
+    font-family: var(--font-display);
+    color: var(--rai-ink);
+}
+
+a {
+    color: var(--rai-paprika-dark);
+}
+
+a:hover {
+    color: var(--rai-paprika);
+}
+
+/* ---------- Navbar ---------- */
+.rai-navbar {
+    background: var(--rai-surface);
+    border-bottom: 1px solid var(--rai-line);
+}
+
+.rai-brand {
+    font-weight: 600;
+    font-size: 1.4rem;
+    letter-spacing: 0.01em;
+}
+
+.rai-brand i {
+    color: var(--rai-paprika);
+}
+
+.navbar-nav .nav-link {
+    color: var(--rai-ink);
+    font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--rai-paprika);
+}
+
+.rai-profile-link {
+    font-weight: 600;
+}
+
+.rai-btn-accent {
+    background: var(--rai-paprika);
+    border-color: var(--rai-paprika);
+    color: #fff;
+    font-weight: 600;
+}
+
+.rai-btn-accent:hover {
+    background: var(--rai-paprika-dark);
+    border-color: var(--rai-paprika-dark);
+    color: #fff;
+}
+
+.rai-btn-outline {
+    border: 1.5px solid var(--rai-paprika);
+    color: var(--rai-paprika-dark);
+    font-weight: 600;
+    background: transparent;
+}
+
+.rai-btn-outline:hover {
+    background: var(--rai-paprika);
+    color: #fff;
+}
+
+/* ---------- Flash messages ---------- */
+.rai-alert {
+    border: 1px solid var(--rai-line);
+    border-radius: 6px;
+}
+
+/* ---------- Hero ---------- */
+.rai-hero {
+    padding: 5rem 0 4rem;
+    background:
+        radial-gradient(circle at 85% 20%, rgba(197, 138, 46, 0.16), transparent 55%),
+        radial-gradient(circle at 10% 80%, rgba(75, 107, 68, 0.14), transparent 45%),
+        var(--rai-parchment);
+    border-bottom: 1px solid var(--rai-line);
+}
+
+.rai-hero-eyebrow {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.75rem;
+    color: var(--rai-herb);
+}
+
+.rai-hero h1 {
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 600;
+    line-height: 1.08;
+    max-width: 14ch;
+}
+
+.rai-hero p.lead {
+    max-width: 46ch;
+    color: #4A4638;
+}
+
+.rai-search-form {
+    background: var(--rai-surface);
+    border: 1px solid var(--rai-line);
+    border-radius: 999px;
+    padding: 0.4rem 0.4rem 0.4rem 1.25rem;
+    box-shadow: 0 10px 30px -18px rgba(34, 48, 31, 0.35);
+    max-width: 560px;
+}
+
+.rai-search-form input {
+    border: none;
+    background: transparent;
+    outline: none;
+    flex: 1;
+    font-family: var(--font-body);
+}
+
+.rai-search-form input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* ---------- Category pills ---------- */
+.rai-category-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    background: var(--rai-surface);
+    border: 1px solid var(--rai-line);
+    color: var(--rai-ink);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color .15s ease, color .15s ease;
+}
+
+.rai-category-pill:hover {
+    border-color: var(--rai-paprika);
+    color: var(--rai-paprika-dark);
+}
+
+/* ---------- Signature element: recipe index card ---------- */
+.rai-card {
+    position: relative;
+    background: var(--rai-surface);
+    border: 1px solid var(--rai-line);
+    border-radius: 10px;
+    overflow: hidden;
+    height: 100%;
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.rai-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 34px -20px rgba(34, 48, 31, 0.45);
+}
+
+.rai-card-punch {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 14px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.rai-card-punch span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--rai-parchment);
+    border: 1px solid var(--rai-line);
+}
+
+.rai-card-img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    background: linear-gradient(135deg, var(--rai-parchment-deep), var(--rai-parchment));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--rai-line);
+    font-size: 2.5rem;
+}
+
+.rai-card-body {
+    padding: 1.1rem 1.1rem 1.25rem;
+    border-top: 1px dashed var(--rai-line);
+}
+
+.rai-card-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.35rem;
+}
+
+.rai-card-meta {
+    font-size: 0.8rem;
+    color: #6B6656;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.rai-card-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.rai-stamp {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--rai-gold);
+    border: 1px solid var(--rai-gold);
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+    transform: rotate(-4deg);
+    display: inline-block;
+}
+
+/* ---------- How it works ---------- */
+.rai-how {
+    padding: 4rem 0;
+}
+
+.rai-how-step {
+    background: var(--rai-surface);
+    border: 1px solid var(--rai-line);
+    border-radius: 10px;
+    padding: 1.5rem;
+    height: 100%;
+}
+
+.rai-how-step .rai-step-num {
+    font-family: var(--font-mono);
+    color: var(--rai-paprika);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+}
+
+/* ---------- CTA ---------- */
+.rai-cta {
+    background: var(--rai-ink);
+    color: var(--rai-parchment);
+    padding: 3.5rem 0;
+    border-radius: 14px;
+}
+
+.rai-cta h2 {
+    color: var(--rai-parchment);
+}
+
+/* ---------- Auth cards ---------- */
+.rai-auth-wrap {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    padding: 3rem 0;
+}
+
+.rai-auth-card {
+    background: var(--rai-surface);
+    border: 1px solid var(--rai-line);
+    border-radius: 12px;
+    padding: 2.25rem;
+    max-width: 440px;
+    margin: 0 auto;
+    box-shadow: 0 20px 45px -30px rgba(34, 48, 31, 0.5);
+}
+
+.rai-auth-card .form-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.rai-auth-card .form-control {
+    border-color: var(--rai-line);
+}
+
+.rai-auth-card .form-control:focus {
+    border-color: var(--rai-paprika);
+    box-shadow: 0 0 0 0.2rem rgba(164, 68, 31, 0.15);
+}
+
+/* ---------- Star rating widget ---------- */
+.rai-star-rating {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 2px;
+    font-size: 1.5rem;
+}
+
+.rai-star-rating input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.rai-star-rating label {
+    color: var(--rai-line);
+    cursor: pointer;
+    transition: color .1s ease;
+}
+
+.rai-star-rating input:checked ~ label,
+.rai-star-rating label:hover,
+.rai-star-rating label:hover ~ label {
+    color: var(--rai-gold);
+}
+
+/* ---------- Footer ---------- */
+.rai-footer {
+    background: var(--rai-ink);
+    color: var(--rai-parchment);
+    padding: 3.5rem 0 2rem;
+    margin-top: 4rem;
+}
+
+.rai-footer .rai-brand {
+    color: var(--rai-parchment);
+}
+
+.rai-footer-heading {
+    color: var(--rai-parchment);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+}
+
+.rai-footer-muted {
+    color: #C9C4B2;
+    font-size: 0.9rem;
+}
+
+.rai-footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.rai-footer-links a {
+    color: #C9C4B2;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.rai-footer-links a:hover {
+    color: var(--rai-gold);
+}
+
+.rai-footer-divider {
+    border-color: rgba(247, 241, 228, 0.15);
+    margin: 2rem 0 1.25rem;
+}
+
+/* ---------- Focus visibility ---------- */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: 2px solid var(--rai-paprika);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rai-card {
+        transition: none;
+    }
+}

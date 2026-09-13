@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit Recipe' if mode == 'edit' else 'Add Recipe' }}{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="mb-4">
+        <div class="rai-hero-eyebrow mb-1">{{ 'Edit' if mode == 'edit' else 'Contribute' }}</div>
+        <h1 class="h3 mb-1">{{ 'Edit Recipe' if mode == 'edit' else 'Add a Recipe' }}</h1>
+        {% if mode != 'edit' %}
+        <p class="text-muted mb-0">Fill in the details below a clear ingredient list and step-by-step
+            instructions help other cooks.</p>
+        {% endif %}
+    </div>
+
+    <div class="rai-card p-4" style="max-width: 760px;">
+        <form method="POST" enctype="multipart/form-data" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+                {% for error in form.name.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows="2") }}
+                {% for error in form.description.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    {{ form.cuisine.label(class="form-label") }}
+                    {{ form.cuisine(class="form-select") }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.meal_category.label(class="form-label") }}
+                    {{ form.meal_category(class="form-select") }}
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    {{ form.prep_time.label(class="form-label") }}
+                    {{ form.prep_time(class="form-control" + (" is-invalid" if form.prep_time.errors else "")) }}
+                    {% for error in form.prep_time.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-md-4">
+                    {{ form.cook_time.label(class="form-label") }}
+                    {{ form.cook_time(class="form-control" + (" is-invalid" if form.cook_time.errors else "")) }}
+                    {% for error in form.cook_time.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-md-4">
+                    {{ form.difficulty.label(class="form-label") }}
+                    {{ form.difficulty(class="form-select") }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.is_vegetarian.label(class="form-label d-block") }}
+                {% for subfield in form.is_vegetarian %}
+                <div class="form-check form-check-inline">
+                    {{ subfield(class="form-check-input") }}
+                    {{ subfield.label(class="form-check-label") }}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.ingredients.label(class="form-label") }}
+                {{ form.ingredients(class="form-control" + (" is-invalid" if form.ingredients.errors else ""), rows="4", placeholder="One ingredient per line") }}
+                {% for error in form.ingredients.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.instructions.label(class="form-label") }}
+                {{ form.instructions(class="form-control" + (" is-invalid" if form.instructions.errors else ""), rows="5", placeholder="Step-by-step instructions") }}
+                {% for error in form.instructions.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="mb-4">
+                {{ form.image.label(class="form-label") }}
+                {{ form.image(class="form-control" + (" is-invalid" if form.image.errors else ""), id="imageInput", accept="image/*") }}
+                {% for error in form.image.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                <div class="form-text">JPG, PNG, GIF, or WEBP. Max 5&nbsp;MB.</div>
+
+                <div class="mt-2">
+                    {% if mode == 'edit' and recipe.image_filename %}
+                    <img id="imagePreview" src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}"
+                         alt="Current recipe image" style="max-width: 200px; border-radius: 8px; border: 1px solid var(--rai-line);">
+                    {% else %}
+                    <img id="imagePreview" src="" alt="" style="max-width: 200px; border-radius: 8px; border: 1px solid var(--rai-line); display: none;">
+                    {% endif %}
+                </div>
+            </div>
+
+            {{ form.submit(class="btn rai-btn-accent px-4") }}
+            {% if mode == 'edit' %}
+            <a href="{{ url_for('recipes.detail', recipe_id=recipe.id) }}" class="btn btn-link">Cancel</a>
+            {% endif %}
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    if (imageInput) {
+        imageInput.addEventListener('change', function () {
+            const file = this.files && this.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+</script>
+{% endblock %}

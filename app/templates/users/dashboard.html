@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+
+{% macro mini_card(recipe) %}
+<div class="col-sm-6 col-lg-4">
+    <a href="{{ url_for('recipes.detail', recipe_id=recipe.id) }}" class="text-decoration-none">
+        <div class="rai-card">
+            <div class="rai-card-punch"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="rai-card-img" style="height: 130px;">
+                {% if recipe.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}" class="w-100 h-100" style="object-fit:cover;">
+                {% else %}
+                <i class="bi bi-egg-fried"></i>
+                {% endif %}
+            </div>
+            <div class="rai-card-body">
+                <div class="rai-card-title" style="font-size: 1rem;">{{ recipe.name }}</div>
+                <div class="rai-card-meta">
+                    <span><i class="bi bi-star-fill text-warning"></i> {{ recipe.average_rating or 'New' }}</span>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+{% endmacro %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="mb-4">
+        <div class="rai-hero-eyebrow mb-1">Your kitchen</div>
+        <h1 class="h3 mb-1">Welcome back, {{ current_user.username }}</h1>
+        <p class="text-muted mb-0">{{ current_user.email }} &middot; Member since {{ current_user.created_at.strftime('%d %b %Y') }}</p>
+    </div>
+
+    <div class="row g-3 mb-5">
+        <div class="col-6 col-md-3">
+            <div class="rai-card p-3 text-center">
+                <div class="h3 mb-0">{{ stats.total_recipes }}</div>
+                <div class="small text-muted">Recipes Created</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="rai-card p-3 text-center">
+                <div class="h3 mb-0">{{ stats.total_favorites }}</div>
+                <div class="small text-muted">Favorites Saved</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="rai-card p-3 text-center">
+                <div class="h3 mb-0">{{ stats.total_ratings_given }}</div>
+                <div class="small text-muted">Ratings Given</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="rai-card p-3 text-center">
+                <a href="{{ url_for('recipes.add') }}" class="btn rai-btn-accent w-100 mt-2">
+                    <i class="bi bi-plus-lg"></i> Add Recipe
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-end mb-3">
+        <h2 class="h5 mb-0">My Recipes</h2>
+        {% if my_recipes_total > my_recipes|length %}
+        <span class="small text-muted">Showing {{ my_recipes|length }} of {{ my_recipes_total }}</span>
+        {% endif %}
+    </div>
+    {% if my_recipes %}
+    <div class="row g-3 mb-5">
+        {% for recipe in my_recipes %}{{ mini_card(recipe) }}{% endfor %}
+    </div>
+    {% else %}
+    <div class="rai-card p-4 text-center mb-5">
+        <p class="mb-2">You haven't added any recipes yet.</p>
+        <a href="{{ url_for('recipes.add') }}" class="btn rai-btn-accent">Add Your First Recipe</a>
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-end mb-3">
+        <h2 class="h5 mb-0">Favorites</h2>
+        <a href="{{ url_for('recipes.favorites') }}" class="small">View all &rarr;</a>
+    </div>
+    {% if favorite_recipes %}
+    <div class="row g-3 mb-5">
+        {% for recipe in favorite_recipes %}{{ mini_card(recipe) }}{% endfor %}
+    </div>
+    {% else %}
+    <div class="rai-card p-4 text-center mb-5">
+        <p class="mb-0">No favorites saved yet browse the catalog and tap the heart on anything you like.</p>
+    </div>
+    {% endif %}
+
+    <h2 class="h5 mb-3">Recently Viewed</h2>
+    {% if recently_viewed %}
+    <div class="row g-3 mb-5">
+        {% for recipe in recently_viewed %}{{ mini_card(recipe) }}{% endfor %}
+    </div>
+    {% else %}
+    <div class="rai-card p-4 text-center mb-5">
+        <p class="mb-0">Recipes you view will show up here.</p>
+    </div>
+    {% endif %}
+
+    <h2 class="h5 mb-3">Recommended for You</h2>
+    {% if recommendations %}
+    <p class="small text-muted mb-3">Because you {{ 'saved' if seed_recipe in favorite_recipes else 'viewed' }} "{{ seed_recipe.name }}"</p>
+    <div class="row g-3">
+        {% for item in recommendations %}{{ mini_card(item.recipe) }}{% endfor %}
+    </div>
+    {% else %}
+    <div class="rai-card p-4 text-center">
+        <p class="mb-0">Favorite or view a few recipes and we'll start recommending more here.</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Manage Recipes{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="mb-4">
+        <div class="rai-hero-eyebrow mb-1">Administration</div>
+        <h1 class="h3 mb-1">All Recipes</h1>
+        <p class="text-muted mb-0">{{ recipes|length }} recipe{{ '' if recipes|length == 1 else 's' }}</p>
+    </div>
+
+    <div class="rai-card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Author</th>
+                        <th>Cuisine</th>
+                        <th>Rating</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for recipe in recipes %}
+                    <tr>
+                        <td><a href="{{ url_for('recipes.detail', recipe_id=recipe.id) }}">{{ recipe.name }}</a></td>
+                        <td>{{ recipe.author.username }}</td>
+                        <td>{{ recipe.cuisine or '—' }}</td>
+                        <td><i class="bi bi-star-fill text-warning"></i> {{ recipe.average_rating or 'New' }}</td>
+                        <td>{{ recipe.created_at.strftime('%d %b %Y') }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.delete_recipe', recipe_id=recipe.id) }}"
+                                  onsubmit="return confirm('Delete &quot;{{ recipe.name }}&quot;? This cannot be undone.');">
+                                {{ delete_form.hidden_tag() }}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

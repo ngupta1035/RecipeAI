@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Explore Recipes{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="mb-4">
+        <div class="rai-hero-eyebrow mb-1">Catalog</div>
+        <h1 class="h3 mb-1">Explore Recipes</h1>
+        <p class="text-muted mb-0">
+            {{ pagination.total }} recipe{{ '' if pagination.total == 1 else 's' }} found
+        </p>
+    </div>
+
+    <form method="GET" class="rai-card p-3 p-md-4 mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small mb-1">Search</label>
+                <input type="text" name="q" class="form-control" placeholder="Name, ingredient, or cuisine"
+                       value="{{ filters.q }}">
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small mb-1">Cuisine</label>
+                <select name="cuisine" class="form-select">
+                    <option value="">All</option>
+                    {% for value, label in cuisine_choices %}
+                    <option value="{{ value }}" {% if filters.cuisine == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small mb-1">Meal</label>
+                <select name="meal_category" class="form-select">
+                    <option value="">All</option>
+                    {% for value, label in meal_choices %}
+                    <option value="{{ value }}" {% if filters.meal_category == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small mb-1">Type</label>
+                <select name="veg" class="form-select">
+                    <option value="">All</option>
+                    <option value="veg" {% if filters.veg == 'veg' %}selected{% endif %}>Vegetarian</option>
+                    <option value="nonveg" {% if filters.veg == 'nonveg' %}selected{% endif %}>Non-Vegetarian</option>
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small mb-1">Difficulty</label>
+                <select name="difficulty" class="form-select">
+                    <option value="">All</option>
+                    {% for value, label in difficulty_choices %}
+                    <option value="{{ value }}" {% if filters.difficulty == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row g-3 align-items-end mt-1">
+            <div class="col-6 col-md-3">
+                <label class="form-label small mb-1">Max cook time (min)</label>
+                <input type="number" name="max_time" min="0" class="form-control" placeholder="Any"
+                       value="{{ filters.max_time }}">
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label small mb-1">Sort by</label>
+                <select name="sort" class="form-select">
+                    <option value="newest" {% if filters.sort == 'newest' %}selected{% endif %}>Newest</option>
+                    <option value="rating" {% if filters.sort == 'rating' %}selected{% endif %}>Highest Rated</option>
+                    <option value="time" {% if filters.sort == 'time' %}selected{% endif %}>Shortest Cook Time</option>
+                </select>
+            </div>
+            <div class="col-md-6 d-flex gap-2 justify-content-md-end">
+                <button type="submit" class="btn rai-btn-accent px-4">
+                    <i class="bi bi-funnel"></i> Apply
+                </button>
+                <a href="{{ url_for('recipes.explore') }}" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </div>
+    </form>
+
+    {% if recipes %}
+    <div class="row g-4">
+        {% for recipe in recipes %}
+        <div class="col-sm-6 col-lg-4">
+            <a href="{{ url_for('recipes.detail', recipe_id=recipe.id) }}" class="text-decoration-none">
+                <div class="rai-card">
+                    <div class="rai-card-punch"><span></span><span></span><span></span><span></span><span></span></div>
+                    <div class="rai-card-img">
+                        {% if recipe.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}" class="w-100 h-100" style="object-fit:cover;">
+                        {% else %}
+                        <i class="bi bi-egg-fried"></i>
+                        {% endif %}
+                    </div>
+                    <div class="rai-card-body">
+                        <div class="rai-card-title">{{ recipe.name }}</div>
+                        <div class="rai-card-meta">
+                            <span><i class="bi bi-clock"></i> {{ recipe.total_time or '—' }} min</span>
+                            <span><i class="bi bi-bar-chart"></i> {{ recipe.difficulty or '—' }}</span>
+                            <span><i class="bi bi-star-fill text-warning"></i> {{ recipe.average_rating or 'New' }}</span>
+                        </div>
+                        {% if recipe.cuisine %}<span class="badge text-bg-light border">{{ recipe.cuisine }}</span>{% endif %}
+                        {% if recipe.meal_category %}<span class="badge text-bg-light border">{{ recipe.meal_category }}</span>{% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if pagination.pages > 1 %}
+    <nav class="mt-5" aria-label="Recipe pages">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {{ 'disabled' if not pagination.has_prev }}">
+                <a class="page-link" href="{{ url_for('recipes.explore', page=pagination.prev_num, q=filters.q, cuisine=filters.cuisine, meal_category=filters.meal_category, veg=filters.veg, difficulty=filters.difficulty, max_time=filters.max_time, sort=filters.sort) if pagination.has_prev else '#' }}">Previous</a>
+            </li>
+            {% for p in pagination.iter_pages() %}
+                {% if p %}
+                <li class="page-item {{ 'active' if p == pagination.page }}">
+                    <a class="page-link" href="{{ url_for('recipes.explore', page=p, q=filters.q, cuisine=filters.cuisine, meal_category=filters.meal_category, veg=filters.veg, difficulty=filters.difficulty, max_time=filters.max_time, sort=filters.sort) }}">{{ p }}</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                {% endif %}
+            {% endfor %}
+            <li class="page-item {{ 'disabled' if not pagination.has_next }}">
+                <a class="page-link" href="{{ url_for('recipes.explore', page=pagination.next_num, q=filters.q, cuisine=filters.cuisine, meal_category=filters.meal_category, veg=filters.veg, difficulty=filters.difficulty, max_time=filters.max_time, sort=filters.sort) if pagination.has_next else '#' }}">Next</a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="rai-card p-4 text-center">
+        <p class="mb-2">No recipes match those filters.</p>
+        <a href="{{ url_for('recipes.explore') }}" class="btn rai-btn-outline">Clear Filters</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('recipes.add') }}" class="btn rai-btn-accent">Add a Recipe</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

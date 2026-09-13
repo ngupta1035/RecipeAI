@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}My Favorites{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="mb-4">
+        <div class="rai-hero-eyebrow mb-1">Saved</div>
+        <h1 class="h3 mb-1">My Favorites</h1>
+        <p class="text-muted mb-0">{{ recipes|length }} recipe{{ '' if recipes|length == 1 else 's' }} saved</p>
+    </div>
+
+    {% if recipes %}
+    <div class="row g-4">
+        {% for recipe in recipes %}
+        <div class="col-sm-6 col-lg-4">
+            <a href="{{ url_for('recipes.detail', recipe_id=recipe.id) }}" class="text-decoration-none">
+                <div class="rai-card">
+                    <div class="rai-card-punch"><span></span><span></span><span></span><span></span><span></span></div>
+                    <div class="rai-card-img">
+                        {% if recipe.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}" class="w-100 h-100" style="object-fit:cover;">
+                        {% else %}
+                        <i class="bi bi-egg-fried"></i>
+                        {% endif %}
+                    </div>
+                    <div class="rai-card-body">
+                        <div class="rai-card-title">{{ recipe.name }}</div>
+                        <div class="rai-card-meta">
+                            <span><i class="bi bi-clock"></i> {{ recipe.total_time or '—' }} min</span>
+                            <span><i class="bi bi-bar-chart"></i> {{ recipe.difficulty or '—' }}</span>
+                            <span><i class="bi bi-star-fill text-warning"></i> {{ recipe.average_rating or 'New' }}</span>
+                        </div>
+                        {% if recipe.cuisine %}<span class="badge text-bg-light border">{{ recipe.cuisine }}</span>{% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="rai-card p-4 text-center">
+        <p class="mb-2">You haven't saved any favorites yet.</p>
+        <a href="{{ url_for('recipes.explore') }}" class="btn rai-btn-accent">Explore Recipes</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Log In{% endblock %}
+
+{% block content %}
+<section class="rai-auth-wrap">
+    <div class="container">
+        <div class="rai-auth-card">
+            <div class="text-center mb-4">
+                <div class="rai-hero-eyebrow mb-1">Welcome back</div>
+                <h1 class="h3 mb-0">Log in to RecipeAI</h1>
+            </div>
+
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="you@example.com") }}
+                    {% for error in form.email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                    {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                </div>
+
+                <div class="form-check mb-4">
+                    {{ form.remember_me(class="form-check-input") }}
+                    {{ form.remember_me.label(class="form-check-label small") }}
+                </div>
+
+                {{ form.submit(class="btn rai-btn-accent w-100") }}
+            </form>
+
+            <p class="text-center small text-muted mt-4 mb-0">
+                New to RecipeAI? <a href="{{ url_for('auth.register') }}">Create an account</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

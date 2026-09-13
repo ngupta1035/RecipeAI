@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="rai-hero">
+    <div class="container">
+        <div class="row align-items-center gy-4">
+            <div class="col-lg-7">
+                <div class="rai-hero-eyebrow mb-2">Content-based recipe intelligence</div>
+                <h1 class="mb-3">Discover, cook, and get recipes recommended for you.</h1>
+                <p class="lead mb-4">Search thousands of dishes, save your favorites, and let a
+                 recommendation engine surface the next recipe you'll love.</p>
+
+                <form class="d-flex align-items-center rai-search-form mb-4" action="{{ url_for('recipes.explore') }}" method="get">
+                    <i class="bi bi-search text-muted"></i>
+                    <input type="text" name="q" class="form-control ms-2" placeholder="Search recipes, ingredients, cuisines&hellip;">
+                    <button type="submit" class="btn rai-btn-accent rounded-pill px-4">Search</button>
+                </form>
+
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('recipes.explore') }}" class="btn rai-btn-accent px-4">Explore Recipes</a>
+                    {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.register') }}" class="btn rai-btn-outline px-4">Create Account</a>
+                    {% else %}
+                    <a href="{{ url_for('recipes.add') }}" class="btn rai-btn-outline px-4">Add a Recipe</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="rai-card mx-auto" style="max-width: 320px;">
+                    <div class="rai-card-punch"><span></span><span></span><span></span><span></span><span></span></div>
+                    <div class="rai-card-img"><i class="bi bi-egg-fried"></i></div>
+                    <div class="rai-card-body">
+                        <div class="rai-stamp mb-2">Recommended for you</div>
+                        <div class="rai-card-title">Paneer Butter Masala</div>
+                        <div class="rai-card-meta">
+                            <span><i class="bi bi-clock"></i> 40 min</span>
+                            <span><i class="bi bi-bar-chart"></i> Medium</span>
+                            <span><i class="bi bi-star-fill text-warning"></i> 4.6</span>
+                        </div>
+                        <span class="badge text-bg-light border">Indian</span>
+                        <span class="badge text-bg-light border">Vegetarian</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <h2 class="rai-display h4 mb-3">Browse by category</h2>
+    <div class="d-flex flex-wrap gap-2">
+        {% for category in categories %}
+        <a href="{{ url_for('recipes.explore') }}?category={{ category }}" class="rai-category-pill">{{ category }}</a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container py-4">
+    <div class="d-flex justify-content-between align-items-end mb-3">
+        <h2 class="rai-display h4 mb-0">Featured recipes</h2>
+        <a href="{{ url_for('recipes.explore') }}" class="small">View all &rarr;</a>
+    </div>
+
+    {% if featured_recipes %}
+    <div class="row g-4">
+        {% for recipe in featured_recipes %}
+        <div class="col-sm-6 col-lg-4">
+            <a href="{{ url_for('recipes.detail', recipe_id=recipe.id) }}" class="text-decoration-none">
+                <div class="rai-card">
+                    <div class="rai-card-punch"><span></span><span></span><span></span><span></span><span></span></div>
+                    <div class="rai-card-img">
+                        {% if recipe.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}" class="w-100 h-100" style="object-fit:cover;">
+                        {% else %}
+                        <i class="bi bi-egg-fried"></i>
+                        {% endif %}
+                    </div>
+                    <div class="rai-card-body">
+                        <div class="rai-card-title">{{ recipe.name }}</div>
+                        <div class="rai-card-meta">
+                            <span><i class="bi bi-clock"></i> {{ recipe.total_time or '—' }} min</span>
+                            <span><i class="bi bi-bar-chart"></i> {{ recipe.difficulty or '—' }}</span>
+                            <span><i class="bi bi-star-fill text-warning"></i> {{ recipe.average_rating or 'New' }}</span>
+                        </div>
+                        {% if recipe.cuisine %}<span class="badge text-bg-light border">{{ recipe.cuisine }}</span>{% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="rai-card p-4 text-center">
+        <p class="mb-2">No recipes yet — be the first to add one.</p>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('recipes.add') }}" class="btn rai-btn-accent">Add a Recipe</a>
+        {% else %}
+        <a href="{{ url_for('auth.register') }}" class="btn rai-btn-accent">Create an Account</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+
+<section class="rai-how">
+    <div class="container">
+        <h2 class="rai-display h4 mb-4">How the recommendation engine works</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="rai-how-step">
+                    <div class="rai-step-num mb-2">STEP 1</div>
+                    <h3 class="h6">We vectorize every recipe</h3>
+                    <p class="small text-muted mb-0">Name, ingredients, cuisine, and category are combined and
+                        converted into numerical vectors with TF-IDF.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="rai-how-step">
+                    <div class="rai-step-num mb-2">STEP 2</div>
+                    <h3 class="h6">We measure similarity</h3>
+                    <p class="small text-muted mb-0">Cosine similarity compares a recipe you like against every
+                        other recipe in the catalog.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="rai-how-step">
+                    <div class="rai-step-num mb-2">STEP 3</div>
+                    <h3 class="h6">You get the top matches</h3>
+                    <p class="small text-muted mb-0">The five closest recipes are surfaced, along with the
+                        ingredients and traits they share.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container pb-5">
+    <div class="rai-cta text-center">
+        <h2 class="h3 mb-2">Ready to start cooking smarter?</h2>
+        <p class="mb-4" style="color: var(--rai-parchment); opacity: .85;">Create a free account to save
+            favorites, rate recipes, and get personalized recommendations.</p>
+        <div class="d-flex justify-content-center gap-2">
+            <a href="{{ url_for('recipes.explore') }}" class="btn rai-btn-accent px-4">Explore Recipes</a>
+            {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light px-4">Create Account</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
