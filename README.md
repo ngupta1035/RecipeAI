@@ -1166,9 +1166,3 @@ Docker / Deployment
 ```
 
 The project is designed to be reproducible from a clean installation using database migrations and the included recipe seed data.
-
-## Acknowledgments
-
-Built as an academic project demonstrating Python/Flask web development,
-relational database design, authentication, CRUD operations, data
-processing, machine learning recommendations, and deployment practices.
