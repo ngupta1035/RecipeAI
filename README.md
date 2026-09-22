@@ -338,7 +338,7 @@ relational database design, authentication, CRUD operations, data
 processing, machine learning recommendations, and deployment practices.
 
 
-***************************************************************************
+------------------------------------------------------------------------------
 
 # RecipeAI — Smart Recipe Recommendation System
 
